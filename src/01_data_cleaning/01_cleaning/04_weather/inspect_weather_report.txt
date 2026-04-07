@@ -1,0 +1,66 @@
+
+============================================================
+Stazione : central_park
+File     : isd_central_park_clean.parquet  (0.9 MB)
+Righe    : 63,846  |  Row group: 6
+Periodo  : 2020-01-01 05:51:00+00:00  →  2021-01-01 04:51:00+00:00
+Schema   : ['datetime_utc', 'station_id', 'station_name', 'temp_c', 'dewpoint_c', 'slp_hpa', 'wind_dir_deg', 'wind_speed_ms', 'visibility_m', 'ceiling_ft', 'precip_mm', 'snow_depth_mm', 'report_type', 'source_file']
+
+  Colonna            non-null %       min       max     media
+  ------------------ ----------  --------  --------  --------
+  temp_c                  99.8%      -9.4      35.0      13.8
+  dewpoint_c              99.7%     -21.1      26.7       7.2
+  slp_hpa                 78.2%     976.8    1041.1    1016.8
+  wind_dir_deg            41.1%      10.0     360.0     183.1
+  wind_speed_ms           85.2%       0.0      10.8       2.4
+  visibility_m            99.9%       0.0   16093.0   13552.8
+  ceiling_ft              97.4%      61.0   22000.0   11179.7
+  precip_mm               87.9%       0.0      38.6       0.2
+  snow_depth_mm            0.0%         —         —         —
+
+  Anni nel primo row group: ['2020']
+  Timestamp duplicati     : 2
+
+============================================================
+Stazione : laguardia
+File     : isd_laguardia_clean.parquet  (0.8 MB)
+Righe    : 58,611  |  Row group: 6
+Periodo  : 2020-01-01 05:51:00+00:00  →  2021-01-01 04:51:00+00:00
+Schema   : ['datetime_utc', 'station_id', 'station_name', 'temp_c', 'dewpoint_c', 'slp_hpa', 'wind_dir_deg', 'wind_speed_ms', 'visibility_m', 'ceiling_ft', 'precip_mm', 'snow_depth_mm', 'report_type', 'source_file']
+
+  Colonna            non-null %       min       max     media
+  ------------------ ----------  --------  --------  --------
+  temp_c                 100.0%      -9.4      36.1      14.5
+  dewpoint_c             100.0%     -20.0      24.0       6.7
+  slp_hpa                 83.1%     976.5    1041.5    1016.8
+  wind_dir_deg            94.6%      10.0     360.0     187.8
+  wind_speed_ms          100.0%       0.0      23.7       4.7
+  visibility_m           100.0%     402.0   16093.0   14349.8
+  ceiling_ft             100.0%      61.0   22000.0    9160.3
+  precip_mm               90.5%       0.0      36.6       0.2
+  snow_depth_mm            0.3%       3.0      23.0      11.1
+
+  Anni nel primo row group: ['2020']
+  Timestamp duplicati     : 2
+
+============================================================
+Stazione : jfk
+File     : isd_jfk_clean.parquet  (0.8 MB)
+Righe    : 56,857  |  Row group: 6
+Periodo  : 2020-01-01 05:51:00+00:00  →  2021-01-01 04:51:00+00:00
+Schema   : ['datetime_utc', 'station_id', 'station_name', 'temp_c', 'dewpoint_c', 'slp_hpa', 'wind_dir_deg', 'wind_speed_ms', 'visibility_m', 'ceiling_ft', 'precip_mm', 'snow_depth_mm', 'report_type', 'source_file']
+
+  Colonna            non-null %       min       max     media
+  ------------------ ----------  --------  --------  --------
+  temp_c                 100.0%      -9.4      35.0      13.5
+  dewpoint_c             100.0%     -20.0      25.6       8.2
+  slp_hpa                 85.4%     977.8    1041.4    1017.2
+  wind_dir_deg            95.1%      10.0     360.0     196.4
+  wind_speed_ms          100.0%       0.0      22.7       5.1
+  visibility_m           100.0%       0.0   16093.0   14272.4
+  ceiling_ft             100.0%       0.0   22000.0    9476.2
+  precip_mm               89.7%       0.0      19.3       0.2
+  snow_depth_mm            0.3%       3.0      18.0      11.7
+
+  Anni nel primo row group: ['2020']
+  Timestamp duplicati     : 0

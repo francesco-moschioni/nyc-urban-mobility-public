@@ -1,0 +1,69 @@
+=== CENSUS DATA SANITY CHECK REPORT ===
+
+============================================================
+CENSUS DATA SANITY CHECK
+============================================================
+
+1. TIGER/Line Shapefile Check
+----------------------------------------
+✓ Shapefile exists: D:\tesi\data\raw\census\shapefiles\tl_2022_36_tract\tl_2022_36_tract.shp
+  Total tracts in NY State: 5411
+  CRS: EPSG:4269
+  Columns: ['STATEFP', 'COUNTYFP', 'TRACTCE', 'GEOID', 'NAME', 'NAMELSAD', 'MTFCC', 'FUNCSTAT', 'ALAND', 'AWATER', 'INTPTLAT', 'INTPTLON', 'geometry']
+
+  NYC tracts only: 2327
+  Breakdown by county:
+    Bronx: 361 tracts
+    Kings (Brooklyn): 805 tracts
+    New York (Manhattan): 310 tracts
+    Queens: 725 tracts
+    Richmond (Staten Island): 126 tracts
+
+2. ACS 5-Year 2022 Data Check
+----------------------------------------
+✓ File exists: D:\tesi\data\raw\census\acs\acs_2022_5yr_nyc.csv
+  Total rows: 2327
+  Columns: 20
+
+  Column names:
+    - GEOID
+    - NAME
+    - state
+    - county
+    - tract
+    - B19013_001E
+    - B01003_001E
+    - B08301_001E
+    - B08301_002E
+    - B08301_010E
+    - B08301_018E
+    - B08301_019E
+    - B25044_001E
+    - B25044_003E
+    - B25044_010E
+    - B01001_001E
+    - B01001_003E
+    - B01001_007E
+    - B01001_020E
+    - B01001_025E
+
+  Sample (first 3 rows):
+         GEOID                                          NAME  state  county  tract  B19013_001E  B01003_001E  B08301_001E  B08301_002E  B08301_010E  B08301_018E  B08301_019E  B25044_001E  B25044_003E  B25044_010E  B01001_001E  B01001_003E  B01001_007E  B01001_020E  B01001_025E
+0  36061000100     Census Tract 1; New York County; New York     36      61    100   -666666666            0            0            0            0            0            0            0            0            0            0            0            0            0            0
+1  36061000201  Census Tract 2.01; New York County; New York     36      61    201        45582         2666          748           43          353           22          182          878            0          803         2666           46            6           14           34
+2  36061000202  Census Tract 2.02; New York County; New York     36      61    202        34710         7001         2861          116         1288          111          404         3293          516         2287         7001           68           13           59           11
+
+  Null counts in key variables:
+    B19013_001E: 0 nulls
+    B01003_001E: 0 nulls
+    B08301_001E: 0 nulls
+
+  Median household income (B19013_001E):
+    Min: $-666,666,666
+    Median: $76,833
+    Max: $250,001
+    Mean: $-36,017,397
+
+============================================================
+✓ Sanity check complete
+============================================================

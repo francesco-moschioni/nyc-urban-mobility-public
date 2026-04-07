@@ -1,0 +1,37 @@
+============================================================
+CLEANING ACS 2022 5-YEAR DATA
+============================================================
+
+Loading: D:\tesi\data\raw\census\acs\acs_2022_5yr_nyc.csv
+  Raw rows: 2327
+
+Replacing Census sentinel values with NaN...
+
+Creating derived variables...
+  Zero-population tracts: 85
+
+============================================================
+SUMMARY STATISTICS (excluding zero-pop tracts)
+============================================================
+
+Valid tracts (population > 0): 2242
+Zero-population tracts: 85
+
+Median household income:
+  Min:    $      11,406
+  Median: $      78,750
+  Mean:   $      85,196
+  Max:    $     250,001
+  NaN:              41
+
+Commute mode shares (mean across tracts):
+  Car:               29.9%
+  Public transit:    46.3%
+  Bicycle:            1.2%
+  Walked:             8.7%
+
+Households with no vehicle:
+  Mean share:  48.3%
+  Median:      50.7%
+
+Saving to: D:\tesi\data\interim\census\acs_2022_5yr_clean.parquet

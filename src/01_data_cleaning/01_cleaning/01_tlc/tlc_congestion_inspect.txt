@@ -1,0 +1,311 @@
+
+======================================================================
+TLC Congestion Fee Inspection — 00_tlc_inspect_congestion.py
+======================================================================
+Looking for keywords: ['congestion', 'cbd', 'mta_fee', 'central_business']
+
+======================================================================
+  MODE: YELLOW  —  D:\tesi\data\raw\tlc\yellow
+======================================================================
+
+  Baseline (yellow_tripdata_2021-01.parquet):
+    Total columns : 19
+    Congestion cols: ['congestion_surcharge']
+
+  Schema drift (2024–2025 vs baseline):
+
+  ⚠  yellow_tripdata_2024-01.parquet:
+       + ADDED:   Airport_fee  (double)
+       - REMOVED: airport_fee
+
+  ⚠  yellow_tripdata_2024-02.parquet:
+       + ADDED:   Airport_fee  (double)
+       - REMOVED: airport_fee
+
+  ⚠  yellow_tripdata_2024-03.parquet:
+       + ADDED:   Airport_fee  (double)
+       - REMOVED: airport_fee
+
+  ⚠  yellow_tripdata_2024-04.parquet:
+       + ADDED:   Airport_fee  (double)
+       - REMOVED: airport_fee
+
+  ⚠  yellow_tripdata_2024-05.parquet:
+       + ADDED:   Airport_fee  (double)
+       - REMOVED: airport_fee
+
+  ⚠  yellow_tripdata_2024-06.parquet:
+       + ADDED:   Airport_fee  (double)
+       - REMOVED: airport_fee
+
+  ⚠  yellow_tripdata_2024-07.parquet:
+       + ADDED:   Airport_fee  (double)
+       - REMOVED: airport_fee
+
+  ⚠  yellow_tripdata_2024-08.parquet:
+       + ADDED:   Airport_fee  (double)
+       - REMOVED: airport_fee
+
+  ⚠  yellow_tripdata_2024-09.parquet:
+       + ADDED:   Airport_fee  (double)
+       - REMOVED: airport_fee
+
+  ⚠  yellow_tripdata_2024-10.parquet:
+       + ADDED:   Airport_fee  (double)
+       - REMOVED: airport_fee
+
+  ⚠  yellow_tripdata_2024-11.parquet:
+       + ADDED:   Airport_fee  (double)
+       - REMOVED: airport_fee
+
+  ⚠  yellow_tripdata_2024-12.parquet:
+       + ADDED:   Airport_fee  (double)
+       - REMOVED: airport_fee
+
+  ⚠  yellow_tripdata_2025-01.parquet:
+       + ADDED:   Airport_fee  (double)
+       + ADDED:   cbd_congestion_fee  (double)
+       - REMOVED: airport_fee
+
+  ⚠  yellow_tripdata_2025-02.parquet:
+       + ADDED:   Airport_fee  (double)
+       + ADDED:   cbd_congestion_fee  (double)
+       - REMOVED: airport_fee
+
+  ⚠  yellow_tripdata_2025-03.parquet:
+       + ADDED:   Airport_fee  (double)
+       + ADDED:   cbd_congestion_fee  (double)
+       - REMOVED: airport_fee
+
+  ⚠  yellow_tripdata_2025-04.parquet:
+       + ADDED:   Airport_fee  (double)
+       + ADDED:   cbd_congestion_fee  (double)
+       - REMOVED: airport_fee
+
+  ⚠  yellow_tripdata_2025-05.parquet:
+       + ADDED:   Airport_fee  (double)
+       + ADDED:   cbd_congestion_fee  (double)
+       - REMOVED: airport_fee
+
+  ⚠  yellow_tripdata_2025-06.parquet:
+       + ADDED:   Airport_fee  (double)
+       + ADDED:   cbd_congestion_fee  (double)
+       - REMOVED: airport_fee
+
+  ⚠  yellow_tripdata_2025-07.parquet:
+       + ADDED:   Airport_fee  (double)
+       + ADDED:   cbd_congestion_fee  (double)
+       - REMOVED: airport_fee
+
+  ⚠  yellow_tripdata_2025-08.parquet:
+       + ADDED:   Airport_fee  (double)
+       + ADDED:   cbd_congestion_fee  (double)
+       - REMOVED: airport_fee
+
+  ⚠  yellow_tripdata_2025-09.parquet:
+       + ADDED:   Airport_fee  (double)
+       + ADDED:   cbd_congestion_fee  (double)
+       - REMOVED: airport_fee
+
+  ⚠  yellow_tripdata_2025-10.parquet:
+       + ADDED:   Airport_fee  (double)
+       + ADDED:   cbd_congestion_fee  (double)
+       - REMOVED: airport_fee
+
+  ⚠  yellow_tripdata_2025-11.parquet:
+       + ADDED:   Airport_fee  (double)
+       + ADDED:   cbd_congestion_fee  (double)
+       - REMOVED: airport_fee
+
+  Congestion-related columns in latest file (yellow_tripdata_2025-11.parquet):
+    congestion_surcharge                      mean=2.1920  min=-2.5000  max=2.5000  non-zero: 944,077/1,048,576 (90.0%)
+    cbd_congestion_fee                        mean=0.5361  min=-0.7500  max=0.7500  non-zero: 770,190/1,048,576 (73.5%)
+
+  Sample rows with non-zero congestion values (row group 0):
+   congestion_surcharge  cbd_congestion_fee
+0                  2.5                 0.75
+1                  2.5                 0.75
+2                  2.5                 0.75
+
+======================================================================
+  MODE: GREEN  —  D:\tesi\data\raw\tlc\green
+======================================================================
+
+  Baseline (green_tripdata_2021-01.parquet):
+    Total columns : 20
+    Congestion cols: ['congestion_surcharge']
+
+  Schema drift (2024–2025 vs baseline):
+    ✓  green_tripdata_2024-01.parquet — schema identical to baseline
+    ✓  green_tripdata_2024-02.parquet — schema identical to baseline
+    ✓  green_tripdata_2024-03.parquet — schema identical to baseline
+    ✓  green_tripdata_2024-04.parquet — schema identical to baseline
+    ✓  green_tripdata_2024-05.parquet — schema identical to baseline
+    ✓  green_tripdata_2024-06.parquet — schema identical to baseline
+    ✓  green_tripdata_2024-07.parquet — schema identical to baseline
+    ✓  green_tripdata_2024-08.parquet — schema identical to baseline
+    ✓  green_tripdata_2024-09.parquet — schema identical to baseline
+    ✓  green_tripdata_2024-10.parquet — schema identical to baseline
+    ✓  green_tripdata_2024-11.parquet — schema identical to baseline
+    ✓  green_tripdata_2024-12.parquet — schema identical to baseline
+
+  ⚠  green_tripdata_2025-01.parquet:
+       + ADDED:   cbd_congestion_fee  (double)
+
+  ⚠  green_tripdata_2025-02.parquet:
+       + ADDED:   cbd_congestion_fee  (double)
+
+  ⚠  green_tripdata_2025-03.parquet:
+       + ADDED:   cbd_congestion_fee  (double)
+
+  ⚠  green_tripdata_2025-04.parquet:
+       + ADDED:   cbd_congestion_fee  (double)
+
+  ⚠  green_tripdata_2025-05.parquet:
+       + ADDED:   cbd_congestion_fee  (double)
+
+  ⚠  green_tripdata_2025-06.parquet:
+       + ADDED:   cbd_congestion_fee  (double)
+
+  ⚠  green_tripdata_2025-07.parquet:
+       + ADDED:   cbd_congestion_fee  (double)
+
+  ⚠  green_tripdata_2025-08.parquet:
+       + ADDED:   cbd_congestion_fee  (double)
+
+  ⚠  green_tripdata_2025-09.parquet:
+       + ADDED:   cbd_congestion_fee  (double)
+
+  ⚠  green_tripdata_2025-10.parquet:
+       + ADDED:   cbd_congestion_fee  (double)
+
+  ⚠  green_tripdata_2025-11.parquet:
+       + ADDED:   cbd_congestion_fee  (double)
+
+  Congestion-related columns in latest file (green_tripdata_2025-11.parquet):
+    congestion_surcharge                      mean=0.8841  min=-2.7500  max=2.7500  non-zero: 13,305/41,343 (32.2%)
+    cbd_congestion_fee                        mean=0.0649  min=-0.7500  max=0.7500  non-zero: 4,067/46,912 (8.7%)
+
+  Sample rows with non-zero congestion values (row group 0):
+   congestion_surcharge  cbd_congestion_fee
+4                 2.75                 0.00
+5                 2.75                 0.75
+6                 2.75                 0.75
+
+======================================================================
+  MODE: HVFHV  —  D:\tesi\data\raw\tlc\fhvhv
+======================================================================
+
+  Baseline (fhvhv_tripdata_2021-01.parquet):
+    Total columns : 24
+    Congestion cols: ['congestion_surcharge']
+
+  Schema drift (2024–2025 vs baseline):
+    ✓  fhvhv_tripdata_2024-01.parquet — schema identical to baseline
+    ✓  fhvhv_tripdata_2024-02.parquet — schema identical to baseline
+    ✓  fhvhv_tripdata_2024-03.parquet — schema identical to baseline
+    ✓  fhvhv_tripdata_2024-04.parquet — schema identical to baseline
+    ✓  fhvhv_tripdata_2024-05.parquet — schema identical to baseline
+    ✓  fhvhv_tripdata_2024-06.parquet — schema identical to baseline
+    ✓  fhvhv_tripdata_2024-07.parquet — schema identical to baseline
+    ✓  fhvhv_tripdata_2024-08.parquet — schema identical to baseline
+    ✓  fhvhv_tripdata_2024-09.parquet — schema identical to baseline
+    ✓  fhvhv_tripdata_2024-10.parquet — schema identical to baseline
+    ✓  fhvhv_tripdata_2024-11.parquet — schema identical to baseline
+    ✓  fhvhv_tripdata_2024-12.parquet — schema identical to baseline
+
+  ⚠  fhvhv_tripdata_2025-01.parquet:
+       + ADDED:   cbd_congestion_fee  (double)
+
+  ⚠  fhvhv_tripdata_2025-02.parquet:
+       + ADDED:   cbd_congestion_fee  (double)
+
+  ⚠  fhvhv_tripdata_2025-03.parquet:
+       + ADDED:   cbd_congestion_fee  (double)
+
+  ⚠  fhvhv_tripdata_2025-04.parquet:
+       + ADDED:   cbd_congestion_fee  (double)
+
+  ⚠  fhvhv_tripdata_2025-05.parquet:
+       + ADDED:   cbd_congestion_fee  (double)
+
+  ⚠  fhvhv_tripdata_2025-06.parquet:
+       + ADDED:   cbd_congestion_fee  (double)
+
+  ⚠  fhvhv_tripdata_2025-07.parquet:
+       + ADDED:   cbd_congestion_fee  (double)
+
+  ⚠  fhvhv_tripdata_2025-08.parquet:
+       + ADDED:   cbd_congestion_fee  (double)
+
+  ⚠  fhvhv_tripdata_2025-09.parquet:
+       + ADDED:   cbd_congestion_fee  (double)
+
+  ⚠  fhvhv_tripdata_2025-10.parquet:
+       + ADDED:   cbd_congestion_fee  (double)
+
+  ⚠  fhvhv_tripdata_2025-11.parquet:
+       + ADDED:   cbd_congestion_fee  (double)
+
+  ⚠  fhvhv_tripdata_2025-12.parquet:
+       + ADDED:   cbd_congestion_fee  (double)
+
+  Congestion-related columns in latest file (fhvhv_tripdata_2025-12.parquet):
+    congestion_surcharge                      mean=0.9497  min=0.0000  max=2.7500  non-zero: 366,145/1,048,576 (34.9%)
+    cbd_congestion_fee                        mean=0.4779  min=0.0000  max=1.5000  non-zero: 334,088/1,048,576 (31.9%)
+
+  Sample rows with non-zero congestion values (row group 0):
+   congestion_surcharge  cbd_congestion_fee
+3                 2.75                  1.5
+4                 2.75                  1.5
+5                 2.75                  1.5
+
+======================================================================
+  MODE: FHV  —  D:\tesi\data\raw\tlc\fhv
+======================================================================
+
+  Baseline (fhv_tripdata_2021-01.parquet):
+    Total columns : 7
+    Congestion cols: none
+
+  Schema drift (2024–2025 vs baseline):
+    ✓  fhv_tripdata_2024-01.parquet — schema identical to baseline
+    ✓  fhv_tripdata_2024-02.parquet — schema identical to baseline
+    ✓  fhv_tripdata_2024-03.parquet — schema identical to baseline
+    ✓  fhv_tripdata_2024-04.parquet — schema identical to baseline
+    ✓  fhv_tripdata_2024-05.parquet — schema identical to baseline
+    ✓  fhv_tripdata_2024-06.parquet — schema identical to baseline
+    ✓  fhv_tripdata_2024-07.parquet — schema identical to baseline
+    ✓  fhv_tripdata_2024-08.parquet — schema identical to baseline
+    ✓  fhv_tripdata_2024-09.parquet — schema identical to baseline
+    ✓  fhv_tripdata_2024-10.parquet — schema identical to baseline
+    ✓  fhv_tripdata_2024-11.parquet — schema identical to baseline
+    ✓  fhv_tripdata_2024-12.parquet — schema identical to baseline
+    ✓  fhv_tripdata_2025-01.parquet — schema identical to baseline
+    ✓  fhv_tripdata_2025-02.parquet — schema identical to baseline
+    ✓  fhv_tripdata_2025-03.parquet — schema identical to baseline
+    ✓  fhv_tripdata_2025-04.parquet — schema identical to baseline
+    ✓  fhv_tripdata_2025-05.parquet — schema identical to baseline
+    ✓  fhv_tripdata_2025-06.parquet — schema identical to baseline
+    ✓  fhv_tripdata_2025-07.parquet — schema identical to baseline
+    ✓  fhv_tripdata_2025-08.parquet — schema identical to baseline
+    ✓  fhv_tripdata_2025-09.parquet — schema identical to baseline
+    ✓  fhv_tripdata_2025-10.parquet — schema identical to baseline
+    ✓  fhv_tripdata_2025-11.parquet — schema identical to baseline
+    ✓  fhv_tripdata_2025-12.parquet — schema identical to baseline
+    No schema drift detected in any 2024–2025 file.
+
+  Congestion-related columns in latest file (fhv_tripdata_2025-12.parquet):
+    None found.
+
+
+======================================================================
+SUMMARY
+======================================================================
+
+Check above for:
+  1. Any '+ ADDED' columns containing 'congestion', 'cbd', or 'mta_fee'
+     in 2024-2025 files → these are candidates for separate tracking
+  2. Non-zero share of the new columns → determines if they are populated
+  3. Value ranges → helps decide if they should enter the price variable
+

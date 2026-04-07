@@ -1,0 +1,12 @@
+======================================================================
+CENSUS TRACT → TLC ZONE CROSSWALK
+======================================================================
+
+1. Loading Census Tracts shapefile...
+   D:\tesi\data\raw\census\shapefiles\tl_2022_36_tract\tl_2022_36_tract.shp
+   Total NY State tracts: 5411
+   CRS: EPSG:4269
+   NYC tracts: 2327
+
+2. Loading ACS 2022 data...
+   D:\tesi\data\interim\census\acs_2022_5yr_clean.parquet

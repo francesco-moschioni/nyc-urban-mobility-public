@@ -1,0 +1,321 @@
+import json
+import time
+from pathlib import Path
+
+import requests
+from requests.exceptions import RequestException
+from tqdm import tqdm
+
+
+# =========================
+# CONFIG
+# =========================
+DOMAIN = "https://data.ny.gov"
+OUT_DIR = Path(r"D:\Tesi\Nyc gov")
+OUT_DIR.mkdir(parents=True, exist_ok=True)
+
+DATASETS = {
+    "MTA Subway Major Incidents: 2015-2019": "ereg-mcvp",
+    "MTA Subway Major Incidents: 2020-2024": "j6d2-s8m2",
+    "MTA Subway Major Incidents: Beginning 2025": "uqnw-2qfk",
+    "MTA Service Alerts: 2012-2020": "3h5b-5ktz",
+    "MTA Service Alerts: Beginning April 2020": "7kct-peq7",
+    "MTA Subway Hourly Ridership: 2017-2019": "t69i-h2me",
+    "MTA Subway Hourly Ridership: Beginning 2025": "5wq4-mkjj",
+    "MTA Daily Ridership and Traffic: Beginning 2020": "sayj-mze2",
+    "MTA Bus Hourly Ridership: 2020-2024": "kv7t-n8in",
+    "MTA Bridges & Tunnels Hourly Traffic Rates: 2010-2025": "ebfx-2m7v",
+    "MTA Subway Origin-Destination Ridership Estimate: Beginning 2025": "y2qv-fytt",
+    "MTA Subway Origin-Destination Ridership Estimate: 2024": "jsu2-fbtj",
+    "MTA Subway Origin-Destination Ridership Estimate: 2023": "uhf3-t34z",
+    "MTA Subway Origin-Destination Ridership Estimate: 2022": "nqnz-e9z9",
+    "MTA Subway Origin-Destination Ridership Estimate: 2021": "rapa-97zv",
+}
+
+
+# =========================
+# HELPERS
+# =========================
+def safe_filename(name: str) -> str:
+    bad = '<>:"/\\|?*'
+    for ch in bad:
+        name = name.replace(ch, "_")
+    name = " ".join(name.split()).strip()
+    return name
+
+
+def meta_path_for(out_file: Path) -> Path:
+    return out_file.with_suffix(out_file.suffix + ".meta.json")
+
+
+def load_meta(meta_file: Path) -> dict | None:
+    if not meta_file.exists():
+        return None
+    try:
+        return json.loads(meta_file.read_text(encoding="utf-8"))
+    except Exception:
+        return None
+
+
+def save_meta(meta_file: Path, meta: dict) -> None:
+    meta_file.write_text(json.dumps(meta, ensure_ascii=False, indent=2), encoding="utf-8")
+
+
+def get_total_count(session: requests.Session, dataset_id: str, timeout_s: int = 60) -> int | None:
+    """
+    Prova a ottenere count(*) via SoQL. Ritorna int oppure None se fallisce.
+    In caso di errori di rete attende 10 secondi e riprova.
+    """
+    endpoint = f"{DOMAIN}/resource/{dataset_id}.json"
+    params = {"$select": "count(*) AS cnt"}
+    while True:
+        try:
+            r = session.get(endpoint, params=params, timeout=timeout_s)
+        except RequestException as e:
+            print(f"    [network error] get_total_count per {dataset_id}: {e}. Attendo 10s e riprovo...")
+            time.sleep(10)
+            continue
+
+        if r.status_code != 200:
+            # se il server risponde con errore, non continuiamo a retry indefinitamente qui:
+            return None
+
+        try:
+            js = r.json()
+        except Exception:
+            return None
+        if not js or "cnt" not in js[0]:
+            return None
+        try:
+            return int(js[0]["cnt"])
+        except Exception:
+            return None
+
+
+# =========================
+# DOWNLOAD (SKIP + RESUME + TQDM + NETWORK RETRY)
+# =========================
+def download_socrata_jsonl_resume(
+    dataset_id: str,
+    out_file: Path,
+    page_size: int = 50000,
+    sleep_s: float = 0.2,
+    timeout_s: int = 120,
+) -> int:
+    """
+    - Se trova meta.completed=true => skip.
+    - Se trova meta.completed=false => riprende da meta.next_offset e APPENDE.
+    - Se non c'è meta => parte da zero e SCRIVE nuovo file.
+    - Progress bar con tqdm.
+    - In caso di problemi di rete (RequestException), attende 10s e ritenta il chunk.
+    """
+    meta_file = meta_path_for(out_file)
+    meta = load_meta(meta_file)
+
+    # skip se già completato
+    if meta and meta.get("completed") is True and meta.get("dataset_id") == dataset_id:
+        done = int(meta.get("rows_downloaded", 0))
+        print(f"    ✔ già completato ({done:,} righe) -> skip")
+        return done
+
+    # coerenza meta
+    if meta and meta.get("dataset_id") != dataset_id:
+        raise RuntimeError(f"Meta file non coerente con dataset_id: {meta_file}")
+
+    offset = int(meta.get("next_offset", 0)) if meta else 0
+    total_downloaded = int(meta.get("rows_downloaded", 0)) if meta else 0
+
+    session = requests.Session()
+    endpoint = f"{DOMAIN}/resource/{dataset_id}.json"
+
+    # inizializzazione meta se non esiste
+    if not meta:
+        if out_file.exists():
+            backup = out_file.with_suffix(out_file.suffix + ".bak")
+            print(f"    File senza meta trovato → rinomino in {backup.name}")
+            out_file.rename(backup)
+
+        total_rows = get_total_count(session, dataset_id)
+        meta = {
+            "dataset_id": dataset_id,
+            "page_size": page_size,
+            "next_offset": 0,
+            "rows_downloaded": 0,
+            "total_rows": total_rows,  # può essere None se count(*) fallisce
+            "completed": False,
+            "endpoint": endpoint,
+            "updated_at_utc": None,
+        }
+        save_meta(meta_file, meta)
+
+    # se total_rows non c'è (es. resume di vecchio meta), prova a prenderlo
+    if meta.get("total_rows") is None:
+        meta["total_rows"] = get_total_count(session, dataset_id)
+        save_meta(meta_file, meta)
+
+    total_rows = meta.get("total_rows")
+    mode = "a" if offset > 0 else "w"
+
+    # tqdm bar (se total_rows è None, tqdm mostra barra indeterminata)
+    pbar = tqdm(
+        total=total_rows,
+        initial=total_downloaded,
+        unit="rows",
+        unit_scale=True,
+        desc=dataset_id,
+        dynamic_ncols=True,
+        smoothing=0.1,
+    )
+
+    with out_file.open(mode, encoding="utf-8") as f:
+        while True:
+            params = {"$limit": page_size, "$offset": offset}
+
+            # attempt the request, retry on network errors after waiting 10s
+            while True:
+                try:
+                    r = session.get(endpoint, params=params, timeout=timeout_s)
+                    break  # success, exit retry loop
+                except RequestException as e:
+                    print(f"\n    [network error] chunk request for {dataset_id}: {e}. Attendo 10s e riprovo...")
+                    time.sleep(10)
+                    continue
+
+            if r.status_code != 200:
+                pbar.close()
+                raise RuntimeError(
+                    f"HTTP {r.status_code} for {dataset_id}\n"
+                    f"URL: {r.url}\n"
+                    f"Body (first 500 chars): {r.text[:500]}"
+                )
+
+            batch = r.json()
+            if not batch:
+                meta["completed"] = True
+                meta["updated_at_utc"] = time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())
+                save_meta(meta_file, meta)
+                break
+
+            for row in batch:
+                f.write(json.dumps(row, ensure_ascii=False))
+                f.write("\n")
+
+            got = len(batch)
+            total_downloaded += got
+            offset += got
+
+            # aggiorna meta spesso (resume affidabile)
+            meta["next_offset"] = offset
+            meta["rows_downloaded"] = total_downloaded
+            meta["updated_at_utc"] = time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())
+            save_meta(meta_file, meta)
+
+            pbar.update(got)
+            time.sleep(sleep_s)
+
+    pbar.close()
+    return total_downloaded
+
+
+# =========================
+# UI (CONSOLE MENU)
+# =========================
+def print_menu(items: list[tuple[str, str]]):
+    print("\nCosa vuoi scaricare?")
+    print("  0) Esci")
+    print("  A) Scarica TUTTO")
+    print("  M) Selezione multipla (es: 1,3,5-7)")
+    print("-" * 80)
+    for i, (name, dsid) in enumerate(items, start=1):
+        print(f"  {i:2d}) {name}  [{dsid}]")
+
+
+def parse_multi_selection(s: str, max_n: int) -> list[int]:
+    """
+    Accetta input tipo: "1,3,5-7"
+    Ritorna lista di indici 1-based unici, ordinati.
+    """
+    s = s.strip()
+    if not s:
+        return []
+    parts = [p.strip() for p in s.split(",") if p.strip()]
+    chosen = set()
+
+    for p in parts:
+        if "-" in p:
+            a, b = p.split("-", 1)
+            a = int(a.strip())
+            b = int(b.strip())
+            if a > b:
+                a, b = b, a
+            for k in range(a, b + 1):
+                if 1 <= k <= max_n:
+                    chosen.add(k)
+        else:
+            k = int(p)
+            if 1 <= k <= max_n:
+                chosen.add(k)
+
+    return sorted(chosen)
+
+
+def main():
+    items = list(DATASETS.items())  # [(name, id), ...]
+
+    while True:
+        print_menu(items)
+        choice = input("\nScelta: ").strip()
+
+        if not choice:
+            continue
+
+        c = choice.lower()
+
+        if c == "0":
+            print("Bye.")
+            return
+
+        # scarica tutto
+        if c == "a":
+            selected = list(range(1, len(items) + 1))
+
+        # selezione multipla
+        elif c == "m":
+            s = input("Inserisci selezione (es: 1,3,5-7): ").strip()
+            selected = parse_multi_selection(s, len(items))
+            if not selected:
+                print("Selezione vuota/non valida.")
+                continue
+
+        # singolo numero
+        else:
+            try:
+                k = int(choice)
+            except ValueError:
+                print("Input non valido. Usa 0, A, M, oppure un numero.")
+                continue
+            if k < 1 or k > len(items):
+                print("Numero fuori range.")
+                continue
+            selected = [k]
+
+        # esegui download
+        for idx in selected:
+            name, dsid = items[idx - 1]
+            fname = f"{safe_filename(name)}__{dsid}.jsonl"
+            out_file = OUT_DIR / fname
+
+            print(f"\nDownloading: {name} [{dsid}]")
+            print(f"Output: {out_file}")
+
+            try:
+                n = download_socrata_jsonl_resume(dsid, out_file)
+                print(f"✓ Stato finale: {n:,} righe (meta: {meta_path_for(out_file).name})")
+            except Exception as e:
+                print(f"✗ Errore su {dsid}: {e}")
+
+        print("\nOperazione completata.")
+
+
+if __name__ == "__main__":
+    main()

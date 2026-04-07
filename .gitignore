@@ -1,0 +1,37 @@
+# Environment variables — contain local paths and secrets
+.env
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+*.egg-info/
+
+# Jupyter checkpoints
+.ipynb_checkpoints/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Heavy data files (live on disk D, not in OneDrive)
+*.parquet
+*.pkl
+*.csv
+*.log
+
+# Credenziali e variabili d'ambiente
+.env
+
+# Python
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+
+# Output generati
+outputs/
+models/
+
+# OS
+.DS_Store
+Thumbs.db
