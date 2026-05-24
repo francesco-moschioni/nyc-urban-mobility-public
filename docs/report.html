@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Thesis Progress — F. Moschioni</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg:        #0d0f14;
+    --panel:     #13161e;
+    --border:    #242836;
+    --accent:    #e8c84a;
+    --accent2:   #4a9ee8;
+    --text:      #e2e4ec;
+    --muted:     #6b7280;
+    --green:     #4cde8a;
+    --red:       #e86a4a;
+    --font-mono: 'DM Mono', monospace;
+    --font-serif:'Instrument Serif', serif;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font-mono);
+    font-size: 13px;
+    line-height: 1.6;
+    min-height: 100vh;
+  }
+  a { color: var(--accent2); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+
+  .container { max-width: 860px; margin: 0 auto; padding: 52px 24px 100px; }
+
+  /* header */
+  .site-header { margin-bottom: 48px; border-bottom: 1px solid var(--border); padding-bottom: 28px; }
+  .site-header h1 {
+    font-family: var(--font-serif); font-size: 30px; font-weight: 400;
+    font-style: italic; color: var(--accent); letter-spacing: -0.3px; margin-bottom: 4px;
+  }
+  .site-header .sub { font-size: 11px; color: var(--muted); letter-spacing: 0.1em; text-transform: uppercase; }
+  .back-link { display: inline-block; margin-top: 16px; font-size: 11px; color: var(--muted);
+    letter-spacing: 0.08em; text-transform: uppercase; text-decoration: none; transition: color .15s; }
+  .back-link:hover { color: var(--accent); text-decoration: none; }
+
+  /* overall summary */
+  .summary-card {
+    background: var(--panel); border: 1px solid var(--border); border-radius: 6px;
+    padding: 20px 24px; margin-bottom: 40px; display: flex; align-items: center; gap: 24px;
+  }
+  .summary-big {
+    font-family: var(--font-serif); font-style: italic;
+    font-size: 42px; color: var(--accent); line-height: 1; white-space: nowrap;
+  }
+  .summary-right { flex: 1; }
+  .summary-label { font-size: 10px; color: var(--muted); letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 8px; }
+  .prog-wrap-main { height: 6px; background: var(--border); border-radius: 3px; overflow: hidden; margin-bottom: 6px; }
+  .prog-bar-main { height: 100%; border-radius: 3px; background: var(--accent); }
+  .summary-generated { font-size: 11px; color: var(--muted); margin-top: 10px; }
+
+  /* section */
+  .pipeline-section { margin-bottom: 40px; }
+  .sec-header {
+    display: flex; align-items: center; gap: 16px;
+    margin-bottom: 12px; padding-bottom: 10px; border-bottom: 1px solid var(--border);
+  }
+  .sec-title { font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); }
+  .sec-prog { display: flex; align-items: center; gap: 8px; margin-left: auto; }
+  .prog-wrap { width: 100px; height: 4px; background: var(--border); border-radius: 2px; overflow: hidden; }
+  .prog-bar  { height: 100%; border-radius: 2px; }
+  .prog-label { font-size: 11px; color: var(--muted); width: 34px; text-align: right; }
+
+  /* table */
+  table { width: 100%; border-collapse: collapse; }
+  thead th {
+    font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--muted); padding: 0 8px 8px; text-align: left; border-bottom: 1px solid var(--border);
+  }
+  tbody tr { border-bottom: 1px solid var(--border); }
+  tbody tr:last-child { border-bottom: none; }
+  tbody tr:hover { background: rgba(255,255,255,.02); }
+  td { padding: 9px 8px; vertical-align: middle; }
+  .check-name { color: var(--text); font-size: 12px; }
+  .detail { color: var(--muted); font-size: 11px; }
+  .oq-code { color: var(--accent); font-size: 11px; white-space: nowrap; }
+
+  /* badges */
+  .badge {
+    display: inline-block; padding: 2px 8px; border-radius: 3px; font-size: 10px;
+    letter-spacing: 0.06em; font-weight: 500; white-space: nowrap;
+  }
+  .badge.ok      { background: #1a3a2a; color: var(--green);  border: 1px solid #2a5a3a; }
+  .badge.missing { background: #3a1a1a; color: var(--red);    border: 1px solid #5a2a2a; }
+  .badge.warn    { background: #3a2a0a; color: var(--accent); border: 1px solid #5a440a; }
+  .badge.future  { background: transparent; color: var(--muted); border: 1px solid var(--border); }
+
+  /* open questions */
+  .oq-section { margin-bottom: 40px; }
+  .section-label {
+    font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted);
+    margin-bottom: 16px; display: flex; align-items: center; gap: 12px;
+  }
+  .section-label::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+
+  footer { margin-top: 60px; padding-top: 20px; border-top: 1px solid var(--border);
+    font-size: 11px; color: var(--muted); letter-spacing: 0.06em; }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <header class="site-header">
+    <h1>Thesis Progress Report</h1>
+    <p class="sub">NYC Urban Mobility · Francesco Moschioni · Bocconi University</p>
+    <a class="back-link" href="index.html">← back to site</a>
+  </header>
+
+  <div class="summary-card">
+    <div class="summary-big" id="pct-big">—</div>
+    <div class="summary-right">
+      <div class="summary-label">Overall pipeline progress</div>
+      <div class="prog-wrap-main">
+        <div class="prog-bar-main" id="prog-main" style="width:0%"></div>
+      </div>
+      <div class="summary-label" id="pct-label">Run generate_report.py locally to update</div>
+      <div class="summary-generated" id="generated-ts">Generated: —</div>
+    </div>
+  </div>
+
+  <!-- ── RAW DATA ──────────────────────────────────────────── -->
+  <section class="pipeline-section">
+    <div class="sec-header">
+      <span class="sec-title">Raw Data</span>
+      <div class="sec-prog">
+        <div class="prog-wrap"><div class="prog-bar" style="width:0%;background:#e86a4a"></div></div>
+        <span class="prog-label">—</span>
+      </div>
+    </div>
+    <table>
+      <thead><tr><th>Source</th><th>Status</th><th>Detail</th></tr></thead>
+      <tbody>
+        <tr><td class="check-name">TLC yellow (parquet/month)</td><td><span class="badge missing">MISSING</span></td><td class="detail"></td></tr>
+        <tr><td class="check-name">TLC fhvhv (parquet/month)</td><td><span class="badge missing">MISSING</span></td><td class="detail"></td></tr>
+        <tr><td class="check-name">MTA ridership / alerts</td><td><span class="badge missing">MISSING</span></td><td class="detail"></td></tr>
+        <tr><td class="check-name">Citi Bike (unzipped CSVs)</td><td><span class="badge missing">MISSING</span></td><td class="detail"></td></tr>
+        <tr><td class="check-name">Weather NOAA</td><td><span class="badge missing">MISSING</span></td><td class="detail"></td></tr>
+        <tr><td class="check-name">Traffic</td><td><span class="badge missing">MISSING</span></td><td class="detail"></td></tr>
+        <tr><td class="check-name">GTFS current feed</td><td><span class="badge missing">MISSING</span></td><td class="detail"></td></tr>
+        <tr><td class="check-name">Census shapefiles</td><td><span class="badge missing">MISSING</span></td><td class="detail"></td></tr>
+        <tr><td class="check-name">Census ACS</td><td><span class="badge missing">MISSING</span></td><td class="detail"></td></tr>
+        <tr><td class="check-name">TLC zones shapefile</td><td><span class="badge missing">MISSING</span></td><td class="detail"></td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- ── STAGE 01 ──────────────────────────────────────────── -->
+  <section class="pipeline-section">
+    <div class="sec-header">
+      <span class="sec-title">Stage 01 — Data Cleaning</span>
+      <div class="sec-prog">
+        <div class="prog-wrap"><div class="prog-bar" style="width:0%;background:#e86a4a"></div></div>
+        <span class="prog-label">—</span>
+      </div>
+    </div>
+    <table>
+      <thead><tr><th>Output</th><th>Status</th><th>Detail</th></tr></thead>
+      <tbody>
+        <tr><td class="check-name">citibike_clean.parquet</td><td><span class="badge missing">MISSING</span></td><td class="detail"></td></tr>
+        <tr><td class="check-name">citibike_tlc.parquet</td><td><span class="badge missing">MISSING</span></td><td class="detail"></td></tr>
+        <tr><td class="check-name">tlc_yellow_clean.parquet</td><td><span class="badge missing">MISSING</span></td><td class="detail"></td></tr>
+        <tr><td class="check-name">tlc_fhvhv_clean.parquet</td><td><span class="badge missing">MISSING</span></td><td class="detail"></td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- ── STAGE 02 ──────────────────────────────────────────── -->
+  <section class="pipeline-section">
+    <div class="sec-header">
+      <span class="sec-title">Stage 02 — Spatial &amp; Temporal Alignment</span>
+      <div class="sec-prog">
+        <div class="prog-wrap"><div class="prog-bar" style="width:0%;background:#e86a4a"></div></div>
+        <span class="prog-label">—</span>
+      </div>
+    </div>
+    <table>
+      <thead><tr><th>Output</th><th>Status</th><th>Detail</th></tr></thead>
+      <tbody>
+        <tr><td class="check-name">mta_flows_estimated.parquet</td><td><span class="badge missing">MISSING</span></td><td class="detail"></td></tr>
+        <tr><td class="check-name">mta_flows_tlc.parquet</td><td><span class="badge missing">MISSING</span></td><td class="detail"></td></tr>
+        <tr><td class="check-name">Temporal panels</td><td><span class="badge missing">MISSING</span></td><td class="detail"></td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- ── STAGES 03–07 ──────────────────────────────────────── -->
+  <section class="pipeline-section">
+    <div class="sec-header">
+      <span class="sec-title">Stages 03–07 — Model Estimation</span>
+    </div>
+    <table>
+      <thead><tr><th>Output</th><th>Status</th><th>Detail</th></tr></thead>
+      <tbody>
+        <tr><td class="check-name">Outside option</td><td><span class="badge future">—</span></td><td class="detail">not yet</td></tr>
+        <tr><td class="check-name">Instruments</td><td><span class="badge future">—</span></td><td class="detail">not yet</td></tr>
+        <tr><td class="check-name">Simple Logit results</td><td><span class="badge future">—</span></td><td class="detail">not yet</td></tr>
+        <tr><td class="check-name">BLP results</td><td><span class="badge future">—</span></td><td class="detail">not yet</td></tr>
+        <tr><td class="check-name">SDI (NLP)</td><td><span class="badge future">—</span></td><td class="detail">not yet</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- ── OPEN QUESTIONS ────────────────────────────────────── -->
+  <div class="oq-section">
+    <div class="section-label">Open Questions</div>
+    <table>
+      <thead><tr><th>Code</th><th>Question</th><th>Blocking</th></tr></thead>
+      <tbody>
+        <tr><td class="oq-code">OQ-1</td><td>Market thickness / temporal granularity</td><td class="detail">blocks 02, 03, 05</td></tr>
+        <tr><td class="oq-code">OQ-2</td><td>Alternative characteristics full spec</td><td class="detail">blocks 02, 05</td></tr>
+        <tr><td class="oq-code">OQ-3</td><td>HVFHV surge pricing IV strategy</td><td class="detail">blocks 04, 05</td></tr>
+        <tr><td class="oq-code">OQ-4</td><td>Taxi price: regulated tariff treatment</td><td class="detail">not blocking MVP</td></tr>
+        <tr><td class="oq-code">OQ-5</td><td>Citi Bike pricing for member trips</td><td class="detail">blocks 01, 05</td></tr>
+        <tr><td class="oq-code">OQ-6</td><td>MTA OD design for Subway/Bus</td><td class="detail">blocks 02, 05</td></tr>
+        <tr><td class="oq-code">OQ-7</td><td>Nest structure for Nested Logit</td><td class="detail">not blocking MVP</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <footer>
+    Francesco Moschioni · NYC Urban Mobility Thesis ·
+    <a href="https://github.com/francesco-moschioni/nyc-urban-mobility-public" target="_blank">GitHub</a>
+    · <em>Update by running <code>python generate_report.py</code> locally</em>
+  </footer>
+
+</div>
+</body>
+</html>
